@@ -8,7 +8,6 @@ import 'package:permission_handler/permission_handler.dart';
 void main() => runApp(ContactsExampleApp());
 
 class ContactsExampleApp extends StatelessWidget {
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -38,8 +37,8 @@ class _ContactListPageState extends State<ContactListPage> {
     PermissionStatus permissionStatus = await _getContactPermission();
     if (permissionStatus == PermissionStatus.granted) {
       // Load without thumbnails initially.
-      var contacts = (await ContactsService.getContacts(withThumbnails: false))
-          .toList();
+      var contacts =
+          (await ContactsService.getContacts(withThumbnails: false)).toList();
       setState(() {
         _contacts = contacts;
       });
@@ -57,18 +56,25 @@ class _ContactListPageState extends State<ContactListPage> {
   }
 
   void updateContact() async {
-    Contact ninja = _contacts.toList().firstWhere((contact) => contact.familyName.startsWith('Ninja'));
+    Contact ninja = _contacts
+        .toList()
+        .firstWhere((contact) => contact.familyName.startsWith('Ninja'));
     ninja.avatar = null;
     await ContactsService.updateContact(ninja);
 
     refreshContacts();
   }
-  
+
   Future<PermissionStatus> _getContactPermission() async {
-    PermissionStatus permission = await PermissionHandler().checkPermissionStatus(PermissionGroup.contacts);
-    if (permission != PermissionStatus.granted && permission != PermissionStatus.disabled) {
-      Map<PermissionGroup, PermissionStatus> permissionStatus = await PermissionHandler().requestPermissions([PermissionGroup.contacts]);
-      return permissionStatus[PermissionGroup.contacts] ?? PermissionStatus.unknown;
+    PermissionStatus permission = await PermissionHandler()
+        .checkPermissionStatus(PermissionGroup.contacts);
+    if (permission != PermissionStatus.granted &&
+        permission != PermissionStatus.disabled) {
+      Map<PermissionGroup, PermissionStatus> permissionStatus =
+          await PermissionHandler()
+              .requestPermissions([PermissionGroup.contacts]);
+      return permissionStatus[PermissionGroup.contacts] ??
+          PermissionStatus.unknown;
     } else {
       return permission;
     }
@@ -103,24 +109,25 @@ class _ContactListPageState extends State<ContactListPage> {
       body: SafeArea(
         child: _contacts != null
             ? ListView.builder(
-          itemCount: _contacts?.length ?? 0,
-          itemBuilder: (BuildContext context, int index) {
-            Contact c = _contacts?.elementAt(index);
-            return ListTile(
-              onTap: () {
-                Navigator.of(context).push(MaterialPageRoute(
-                    builder: (BuildContext context) =>
-                        ContactDetailsPage(c)));
-              },
-              leading: (c.avatar != null && c.avatar.isNotEmpty)
-                  ? CircleAvatar(backgroundImage: MemoryImage(c.avatar))
-                  : CircleAvatar(child: Text(c.initials())),
-              title: Text(c.displayName ?? ''),
-
-            );
-          },
-        )
-            : Center(child: CircularProgressIndicator(),),
+                itemCount: _contacts?.length ?? 0,
+                itemBuilder: (BuildContext context, int index) {
+                  Contact c = _contacts?.elementAt(index);
+                  return ListTile(
+                    onTap: () {
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: (BuildContext context) =>
+                              ContactDetailsPage(c)));
+                    },
+                    leading: (c.avatar != null && c.avatar.isNotEmpty)
+                        ? CircleAvatar(backgroundImage: MemoryImage(c.avatar))
+                        : CircleAvatar(child: Text(c.initials())),
+                    title: Text(c.displayName ?? ''),
+                  );
+                },
+              )
+            : Center(
+                child: CircularProgressIndicator(),
+              ),
       ),
     );
   }
@@ -147,7 +154,11 @@ class ContactDetailsPage extends StatelessWidget {
           IconButton(
             icon: Icon(Icons.update),
             onPressed: () => Navigator.of(context).push(
-              MaterialPageRoute(builder: (context) => UpdateContactsPage(contact: _contact,),),
+              MaterialPageRoute(
+                builder: (context) => UpdateContactsPage(
+                  contact: _contact,
+                ),
+              ),
             ),
           ),
         ],
@@ -177,7 +188,9 @@ class ContactDetailsPage extends StatelessWidget {
             ),
             ListTile(
               title: Text('Birthday'),
-              trailing: Text(_contact.birthday != null ? DateFormat('dd-MM-yyyy').format(_contact.birthday) : ''),
+              trailing: Text(_contact.birthday != null
+                  ? DateFormat('dd-MM-yyyy').format(_contact.birthday)
+                  : ''),
             ),
             ListTile(
               title: Text('Company'),
@@ -189,7 +202,9 @@ class ContactDetailsPage extends StatelessWidget {
             ),
             ListTile(
               title: Text('Account Type'),
-              trailing: Text((_contact.androidAccountType != null) ? _contact.androidAccountType.toString() : ''),
+              trailing: Text((_contact.androidAccountType != null)
+                  ? _contact.androidAccountType.toString()
+                  : ''),
             ),
             AddressesTile(_contact.postalAddresses),
             ItemsTile('Phones', _contact.phones),
@@ -212,33 +227,35 @@ class AddressesTile extends StatelessWidget {
       children: <Widget>[
         ListTile(title: Text('Addresses')),
         Column(
-          children: _addresses.map((a) => Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0),
-            child: Column(
-              children: <Widget>[
-                ListTile(
-                  title: Text('Street'),
-                  trailing: Text(a.street ?? ''),
-                ),
-                ListTile(
-                  title: Text('Postcode'),
-                  trailing: Text(a.postcode ?? ''),
-                ),
-                ListTile(
-                  title: Text('City'),
-                  trailing: Text(a.city ?? ''),
-                ),
-                ListTile(
-                  title: Text('Region'),
-                  trailing: Text(a.region ?? ''),
-                ),
-                ListTile(
-                  title: Text('Country'),
-                  trailing: Text(a.country ?? ''),
-                ),
-              ],
-            ),
-          )).toList(),
+          children: _addresses
+              .map((a) => Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                    child: Column(
+                      children: <Widget>[
+                        ListTile(
+                          title: Text('Street'),
+                          trailing: Text(a.street ?? ''),
+                        ),
+                        ListTile(
+                          title: Text('Postcode'),
+                          trailing: Text(a.postcode ?? ''),
+                        ),
+                        ListTile(
+                          title: Text('City'),
+                          trailing: Text(a.city ?? ''),
+                        ),
+                        ListTile(
+                          title: Text('Region'),
+                          trailing: Text(a.region ?? ''),
+                        ),
+                        ListTile(
+                          title: Text('Country'),
+                          trailing: Text(a.country ?? ''),
+                        ),
+                      ],
+                    ),
+                  ))
+              .toList(),
         ),
       ],
     );
@@ -257,13 +274,17 @@ class ItemsTile extends StatelessWidget {
       children: <Widget>[
         ListTile(title: Text(_title)),
         Column(
-          children: _items.map((i) => Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0),
-            child: ListTile(
-              title: Text(i.label ?? ''),
-              trailing: Text(i.value ?? ''),
-            ),),
-          ).toList(),
+          children: _items
+              .map(
+                (i) => Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                  child: ListTile(
+                    title: Text(i.label ?? ''),
+                    trailing: Text(i.value ?? ''),
+                  ),
+                ),
+              )
+              .toList(),
         ),
       ],
     );
@@ -325,12 +346,14 @@ class _AddContactPageState extends State<AddContactPage> {
               ),
               TextFormField(
                 decoration: const InputDecoration(labelText: 'Phone'),
-                onSaved: (v) => contact.phones = [Item(label: 'mobile', value: v)],
+                onSaved: (v) =>
+                    contact.phones = [Item(label: 'mobile', value: v)],
                 keyboardType: TextInputType.phone,
               ),
               TextFormField(
                 decoration: const InputDecoration(labelText: 'E-mail'),
-                onSaved: (v) => contact.emails = [Item(label: 'work', value: v)],
+                onSaved: (v) =>
+                    contact.emails = [Item(label: 'work', value: v)],
                 keyboardType: TextInputType.emailAddress,
               ),
               TextFormField(
@@ -370,7 +393,7 @@ class _AddContactPageState extends State<AddContactPage> {
 }
 
 class UpdateContactsPage extends StatefulWidget {
-  UpdateContactsPage({ @required this.contact });
+  UpdateContactsPage({@required this.contact});
   final Contact contact;
   @override
   _UpdateContactsPageState createState() => _UpdateContactsPageState();
@@ -385,6 +408,7 @@ class _UpdateContactsPageState extends State<UpdateContactsPage> {
     super.initState();
     contact = widget.contact;
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -392,12 +416,16 @@ class _UpdateContactsPageState extends State<UpdateContactsPage> {
         title: Text('Update Contact'),
         actions: <Widget>[
           IconButton(
-            icon: Icon(Icons.save, color: Colors.white,),
+            icon: Icon(
+              Icons.save,
+              color: Colors.white,
+            ),
             onPressed: () async {
               _formKey.currentState.save();
               contact.postalAddresses = [address];
               await ContactsService.updateContact(contact).then((_) {
-                Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => ContactListPage()));
+                Navigator.of(context).pushReplacement(
+                    MaterialPageRoute(builder: (context) => ContactListPage()));
               });
             },
           ),
@@ -436,12 +464,14 @@ class _UpdateContactsPageState extends State<UpdateContactsPage> {
               ),
               TextFormField(
                 decoration: const InputDecoration(labelText: 'Phone'),
-                onSaved: (v) => contact.phones = [Item(label: 'mobile', value: v)],
+                onSaved: (v) =>
+                    contact.phones = [Item(label: 'mobile', value: v)],
                 keyboardType: TextInputType.phone,
               ),
               TextFormField(
                 decoration: const InputDecoration(labelText: 'E-mail'),
-                onSaved: (v) => contact.emails = [Item(label: 'work', value: v)],
+                onSaved: (v) =>
+                    contact.emails = [Item(label: 'work', value: v)],
                 keyboardType: TextInputType.emailAddress,
               ),
               TextFormField(

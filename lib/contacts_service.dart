@@ -49,8 +49,8 @@ class ContactsService {
   /// Loads the avatar for the given contact and returns it. If the user does
   /// not have an avatar, then `null` is returned in that slot. Only implemented
   /// on Android.
-  static Future<Uint8List> getAvatar(
-      final Contact contact, {final bool photoHighRes = true}) =>
+  static Future<Uint8List> getAvatar(final Contact contact,
+          {final bool photoHighRes = true}) =>
       _channel.invokeMethod('getAvatar', <String, dynamic>{
         'contact': Contact._toMap(contact),
         'photoHighResolution': photoHighRes,
@@ -89,7 +89,15 @@ class Contact {
     this.androidAccountName,
   });
 
-  String identifier, displayName, givenName, middleName, prefix, suffix, familyName, company, jobTitle;
+  String identifier,
+      displayName,
+      givenName,
+      middleName,
+      prefix,
+      suffix,
+      familyName,
+      company,
+      jobTitle;
   String androidAccountTypeRaw, androidAccountName;
   AndroidAccountType androidAccountType;
   Iterable<Item> emails = [];
@@ -157,7 +165,7 @@ class Contact {
       'suffix': contact.suffix,
       'company': contact.company,
       'jobTitle': contact.jobTitle,
-      'androidAccountType': contact.androidAccountTypeRaw, 
+      'androidAccountType': contact.androidAccountTypeRaw,
       'androidAccountName': contact.androidAccountName,
       'emails': emails,
       'phones': phones,
@@ -173,30 +181,30 @@ class Contact {
 
   /// The [+] operator fills in this contact's empty fields with the fields from [other]
   Contact operator +(Contact other) => Contact(
-      givenName: givenName ?? other.givenName,
-      middleName: middleName ?? other.middleName,
-      prefix: prefix ?? other.prefix,
-      suffix: suffix ?? other.suffix,
-      familyName: familyName ?? other.familyName,
-      company: company ?? other.company,
-      jobTitle: jobTitle ?? other.jobTitle,
-      androidAccountType: androidAccountType ?? other.androidAccountType,
-      androidAccountName: androidAccountName ?? other.androidAccountName,
-      emails: emails == null
-          ? other.emails
-          : emails.toSet().union(other.emails?.toSet() ?? {}).toList(),
-      phones: phones == null
-          ? other.phones
-          : phones.toSet().union(other.phones?.toSet() ?? {}).toList(),
-      postalAddresses: postalAddresses == null
-          ? other.postalAddresses
-          : postalAddresses
-              .toSet()
-              .union(other.postalAddresses?.toSet() ?? {})
-              .toList(),
-      avatar: avatar ?? other.avatar,
-      birthday: birthday ?? other.birthday,
-    );
+        givenName: givenName ?? other.givenName,
+        middleName: middleName ?? other.middleName,
+        prefix: prefix ?? other.prefix,
+        suffix: suffix ?? other.suffix,
+        familyName: familyName ?? other.familyName,
+        company: company ?? other.company,
+        jobTitle: jobTitle ?? other.jobTitle,
+        androidAccountType: androidAccountType ?? other.androidAccountType,
+        androidAccountName: androidAccountName ?? other.androidAccountName,
+        emails: emails == null
+            ? other.emails
+            : emails.toSet().union(other.emails?.toSet() ?? {}).toList(),
+        phones: phones == null
+            ? other.phones
+            : phones.toSet().union(other.phones?.toSet() ?? {}).toList(),
+        postalAddresses: postalAddresses == null
+            ? other.postalAddresses
+            : postalAddresses
+                .toSet()
+                .union(other.postalAddresses?.toSet() ?? {})
+                .toList(),
+        avatar: avatar ?? other.avatar,
+        birthday: birthday ?? other.birthday,
+      );
 
   /// Returns true if all items in this contact are identical.
   @override
@@ -250,7 +258,8 @@ class Contact {
     } else if (androidAccountType.startsWith('com.facebook')) {
       return AndroidAccountType.facebook;
     }
-    /// Other account types are not supported on Android 
+
+    /// Other account types are not supported on Android
     /// such as Samsung, htc etc...
     return AndroidAccountType.other;
   }
@@ -359,9 +368,7 @@ class Item {
 
   @override
   bool operator ==(Object other) {
-    return other is Item &&
-        label == other.label &&
-        value == other.value;
+    return other is Item && label == other.label && value == other.value;
   }
 
   @override
@@ -370,9 +377,4 @@ class Item {
   static Map _toMap(Item i) => {'label': i.label, 'value': i.value};
 }
 
-enum AndroidAccountType {
-  facebook,
-  google,
-  whatsapp,
-  other
-}
+enum AndroidAccountType { facebook, google, whatsapp, other }
